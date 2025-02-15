@@ -8,6 +8,8 @@ const FoodMenu = require('../../models/adminModels/FoodMenu');
 const Payment = require('../../models/adminModels/Payment');
 const Complaint = require('../../models/adminModels/Complaint');
 const Cloths = require('../../models/adminModels/Cloths');
+// const Floor = require('../../models/adminModels/Floor');
+
 const moment = require('moment');
 
 const mongoose = require('mongoose');
@@ -3007,6 +3009,75 @@ router.get('/notice-period', async (req, res) => {
   }
 });
 
+
+
+router.get('/unpaid-buddies-by-date', async (req, res) => {
+  try {
+    const { hostelId, date } = req.query;
+
+    if (!hostelId || !date) {
+      return res.status(400).json({ error: 'Hostel ID and Date are required' });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(hostelId)) {
+      return res.status(400).json({ error: 'Invalid Hostel ID' });
+    }
+
+    const selectedDate = moment(date, 'YYYY-MM-DD').startOf('day');
+    if (!selectedDate.isValid()) {
+      return res.status(400).json({ error: 'Invalid date format' });
+    }
+
+    const buddies = await Buddie.find({ hostel_id: hostelId, approved: true });
+
+    const payments = await Payment.aggregate([
+      {
+        $match: {
+          hostel_id: new mongoose.Types.ObjectId(hostelId),
+          status: 'accepted',
+        },
+      },
+      {
+        $group: {
+          _id: '$buddie_id',
+          lastPaymentDate: { $max: '$date' },
+        },
+      },
+    ]);
+
+    const paymentMap = new Map(
+      payments.map((payment) => [payment._id.toString(), moment(payment.lastPaymentDate)])
+    );
+
+    const unpaidBuddies = buddies.filter((buddie) => {
+      const joiningDate = moment(buddie.buddie_doj).startOf('day');
+      let lastPaymentDate = paymentMap.get(buddie._id.toString()) || joiningDate;
+
+      // Normalize last payment date to day-of-month for consistency
+      const dayOfJoining = joiningDate.date();
+
+      // Move the last payment date forward month by month
+      while (lastPaymentDate.isBefore(selectedDate, 'month')) {
+        lastPaymentDate.add(1, 'month').date(dayOfJoining);
+      }
+
+      // Check if the due date matches the selected date exactly
+      return lastPaymentDate.isSame(selectedDate, 'day');
+    });
+
+    const result = unpaidBuddies.map((buddie) => ({
+      name: buddie.buddie_name,
+      contact: buddie.buddie_contact,
+      roomNumber: buddie.room_no || 'N/A',
+      dateOfJoining: buddie.buddie_doj,
+    }));
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching unpaid buddies by date:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 

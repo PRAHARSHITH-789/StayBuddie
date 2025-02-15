@@ -452,13 +452,24 @@ const Settings = ({socket}) => {
           </ListItem>
 
 
-          <Divider />
-          <ListItem button sx={{ py: 2 }} component={Link} to="/admin/unpaid-buddies">
+          {/* <Divider />
+          <ListItem button sx={{ py: 2 }} component={Link} to="/admin/floor">
             <ListItemIcon>
               <Group />
             </ListItemIcon>
-            <ListItemText primary="Unpaid Buddies" />
+            <ListItemText primary="Floor" />
+          </ListItem> */}
+
+
+          <Divider />
+          <ListItem button sx={{ py: 2 }} component={Link} to="/admin/unpaid-daywise">
+            <ListItemIcon>
+              <Group />
+            </ListItemIcon>
+            <ListItemText primary="Unpaid Daywise" />
           </ListItem>
+
+
 
           <Divider />
           <ListItem button sx={{ py: 2 }} component={Link} to="/admin/terms-conditions">

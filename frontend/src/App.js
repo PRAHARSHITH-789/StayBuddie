@@ -42,6 +42,9 @@ import AdminTerms from './admin/AdminTerms'
 import AdminHelp from './admin/AdminHelp'
 import AdminDhobiCloths from './admin/AdminDhobiCloths'
 import UnpaidBuddiesList from './admin/UnpaidBuddiesList';
+import UnpaidDaywise from './admin/UnpaidDaywise';
+// import Floor from './admin/Floor';
+
 
 import { io } from "socket.io-client";
 import { useUserContext } from './HostelContext';
@@ -207,6 +210,10 @@ const App = () => {
           <Route path="dhobi" element={<AdminDhobiCloths />} />
           <Route path="notice-period" element={<NoticePeriodList />} />
           <Route path="unpaid-buddies" element={<UnpaidBuddiesList />} />
+          <Route path="unpaid-daywise" element={<UnpaidDaywise />} />
+          {/* <Route path="floor" element={<Floor />} /> */}
+
+
 
 
         </Route>
