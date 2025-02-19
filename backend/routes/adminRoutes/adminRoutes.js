@@ -1401,6 +1401,41 @@ router.put('/payments/:paymentId/reject', async (req, res) => {
 //   }
 // });
 
+
+
+
+// Mark Payment as Paid (PUT /admin/payments/:id/mark-paid)
+router.put('/payments/:id/mark-paid', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const payment = await Payment.findById(id);
+    if (!payment) {
+      return res.status(404).json({ message: 'Payment not found' });
+    }
+
+    if (payment.status === 'paid') {
+      return res.status(400).json({ message: 'Payment is already marked as paid' });
+    }
+
+    // Update rent_amount by adding pending_amount and set pending_amount to 0
+    payment.paid_amount += payment.pending_amount;
+    payment.pending_amount = 0;
+    payment.status = 'paid';
+
+    await payment.save();
+
+    res.status(200).json(payment);
+  } catch (error) {
+    console.error('Error marking payment as paid:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+
+
 // payments counts
 router.get('/payments/hostel/:hostelId/pendingCount', async (req, res) => {
   try {
@@ -2052,47 +2087,98 @@ router.get('/payment-details', async (req, res) => {
 });
 
 
+// router.post('/payments/add-payment', async (req, res) => {
+//   const { buddie_name, rent_amount, payment_date, hostel_id, month } = req.body;
+
+//   try {
+//     // Find the buddie based on name
+//     const buddie = await Buddie.findOne({ buddie_name });
+
+//     if (!buddie) {
+//       return res.status(404).json({ message: 'Buddie not found' });
+//     }
+
+//     // Check if hostel ID is valid
+//     const hostel = await Hostel.findById(hostel_id);
+//     if (!hostel) {
+//       return res.status(404).json({ message: 'Hostel not found' });
+//     }
+
+//     // Create a new payment record
+//     const newPayment = new Payment({
+//       buddie_id: buddie._id,
+//       buddie_name:buddie.buddie_name,
+//       hostel_id: hostel._id,
+//       amount: rent_amount,
+//       date: new Date(payment_date),
+//       month: month,
+//       status: 'accepted', // Set the payment status to 'accepted'
+
+//     });
+
+//     // Save the payment
+//     await newPayment.save();
+//     return res.status(201).json({ message: 'Payment added successfully', payment: newPayment });
+//   } catch (error) {
+//     console.error('Error adding payment:', error);
+//     return res.status(500).json({ message: 'Error adding payment', error: error.message });
+//   }
+// });
+
+
+
+
+// Add Payment Endpoint
 router.post('/payments/add-payment', async (req, res) => {
-  const { buddie_name, rent_amount, payment_date, hostel_id, month } = req.body;
+  const {
+    buddie_id,
+    buddie_name,
+    room_no,
+    rent_amount,
+    paid_amount,
+    pending_amount,
+    payment_date,
+    hostel_id,
+    month,
+    status,
+  } = req.body;
 
   try {
-    // Find the buddie based on name
-    const buddie = await Buddie.findOne({ buddie_name });
-
+    const buddie = await Buddie.findById(buddie_id);
     if (!buddie) {
       return res.status(404).json({ message: 'Buddie not found' });
     }
 
-    // Check if hostel ID is valid
     const hostel = await Hostel.findById(hostel_id);
     if (!hostel) {
       return res.status(404).json({ message: 'Hostel not found' });
     }
 
-    // Create a new payment record
     const newPayment = new Payment({
-      buddie_id: buddie._id,
-      buddie_name:buddie.buddie_name,
-      hostel_id: hostel._id,
-      amount: rent_amount,
-      date: new Date(payment_date),
-      month: month,
-      status: 'accepted', // Set the payment status to 'accepted'
-
+      buddie_id,
+      buddie_name, // ADDING BUDDIE NAME
+      room_no,
+      rent_amount,
+      paid_amount,
+      pending_amount,
+      payment_date: new Date(payment_date),
+      hostel_id,
+      month,
+      status,
     });
 
-    // Save the payment
     await newPayment.save();
 
-
-
-
-    return res.status(201).json({ message: 'Payment added successfully', payment: newPayment });
+    res.status(201).json({
+      message: 'Payment added successfully',
+      payment: newPayment,
+    });
   } catch (error) {
     console.error('Error adding payment:', error);
-    return res.status(500).json({ message: 'Error adding payment', error: error.message });
+    res.status(500).json({ message: 'Error adding payment', error: error.message });
   }
 });
+
 
 
 
@@ -3011,70 +3097,306 @@ router.get('/notice-period', async (req, res) => {
 
 
 
-router.get('/unpaid-buddies-by-date', async (req, res) => {
-  try {
-    const { hostelId, date } = req.query;
+// router.get('/unpaid-buddies-by-date', async (req, res) => {
+//   try {
+//     const { hostelId, date } = req.query;
 
-    if (!hostelId || !date) {
-      return res.status(400).json({ error: 'Hostel ID and Date are required' });
+//     if (!hostelId || !date) {
+//       return res.status(400).json({ error: 'Hostel ID and Date are required' });
+//     }
+
+//     if (!mongoose.Types.ObjectId.isValid(hostelId)) {
+//       return res.status(400).json({ error: 'Invalid Hostel ID' });
+//     }
+
+//     const selectedDate = moment(date, 'YYYY-MM-DD').startOf('day');
+//     if (!selectedDate.isValid()) {
+//       return res.status(400).json({ error: 'Invalid date format' });
+//     }
+
+//     const buddies = await Buddie.find({ hostel_id: hostelId, approved: true });
+
+//     const payments = await Payment.aggregate([
+//       {
+//         $match: {
+//           hostel_id: new mongoose.Types.ObjectId(hostelId),
+//           status: 'accepted',
+//         },
+//       },
+//       {
+//         $group: {
+//           _id: '$buddie_id',
+//           lastPaymentDate: { $max: '$date' },
+//         },
+//       },
+//     ]);
+
+//     const paymentMap = new Map(
+//       payments.map((payment) => [payment._id.toString(), moment(payment.lastPaymentDate)])
+//     );
+
+//     const unpaidBuddies = buddies.filter((buddie) => {
+//       const joiningDate = moment(buddie.buddie_doj).startOf('day');
+//       let lastPaymentDate = paymentMap.get(buddie._id.toString()) || joiningDate;
+
+//       // Normalize last payment date to day-of-month for consistency
+//       const dayOfJoining = joiningDate.date();
+
+//       // Move the last payment date forward month by month
+//       while (lastPaymentDate.isBefore(selectedDate, 'month')) {
+//         lastPaymentDate.add(1, 'month').date(dayOfJoining);
+//       }
+
+//       // Check if the due date matches the selected date exactly
+//       return lastPaymentDate.isSame(selectedDate, 'day');
+//     });
+
+//     const result = unpaidBuddies.map((buddie) => ({
+//       name: buddie.buddie_name,
+//       contact: buddie.buddie_contact,
+//       roomNumber: buddie.room_no || 'N/A',
+//       dateOfJoining: buddie.buddie_doj,
+//     }));
+
+//     res.json(result);
+//   } catch (error) {
+//     console.error('Error fetching unpaid buddies by date:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+
+
+
+
+
+// GET /admin/rooms?hostelId=HOSTEL_ID
+
+
+
+
+router.get('/get-rooms', async (req, res) => {
+  try {
+    const { hostelId } = req.query;
+
+    if (!hostelId) {
+      return res.status(400).json({ error: 'Hostel ID is required' });
+    }
+
+    const rooms = await Room.find({ hostel_id: hostelId }).select('room_number');
+    res.status(200).json(rooms);
+  } catch (error) {
+    console.error('Error fetching rooms:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
+
+// Get buddies by room number
+router.get('/buddies-by-room', async (req, res) => {
+  try {
+    const { room_number, hostelId } = req.query;
+
+    if (!room_number || !hostelId) {
+      return res.status(400).json({ message: 'Room number and Hostel ID are required' });
+    }
+
+    const buddies = await Buddie.find({ room_no: room_number, hostel_id: hostelId }, 'buddie_name');
+    res.json(buddies);
+  } catch (error) {
+    console.error('Error fetching buddies by room:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Get unpaid buddies between startDate and endDate
+// router.get('/unpaid-buddies-by-date-range', async (req, res) => {
+//   try {
+//     const { hostelId, startDate, endDate } = req.query;
+
+//     if (!hostelId || !startDate || !endDate) {
+//       return res.status(400).json({ error: 'Hostel ID, Start Date, and End Date are required' });
+//     }
+
+//     if (!mongoose.Types.ObjectId.isValid(hostelId)) {
+//       return res.status(400).json({ error: 'Invalid Hostel ID' });
+//     }
+
+//     const startMoment = moment(startDate, 'YYYY-MM-DD').startOf('day');
+//     const endMoment = moment(endDate, 'YYYY-MM-DD').endOf('day');
+
+//     if (!startMoment.isValid() || !endMoment.isValid() || startMoment.isAfter(endMoment)) {
+//       return res.status(400).json({ error: 'Invalid date range' });
+//     }
+
+//     const buddies = await Buddie.find({ hostel_id: hostelId, approved: true });
+
+//     const payments = await Payment.find({
+//       hostel_id: hostelId,
+//       status: { $in: ['accepted', 'partial'] },
+//     });
+
+//     // Group payments by Buddie and Month-Year
+//     const paymentMap = new Map();
+//     payments.forEach((payment) => {
+//       const monthYear = moment(payment.payment_date).format('YYYY-MM');
+//       const key = `${payment.buddie_id.toString()}-${monthYear}`;
+//       paymentMap.set(key, payment);
+//     });
+
+//     const unpaidBuddies = [];
+
+//     buddies.forEach((buddie) => {
+//       const joiningDate = moment(buddie.buddie_doj).startOf('day');
+//       const dueDay = joiningDate.date();
+
+//       // If joining date is after the end date, skip this buddie
+//       if (joiningDate.isAfter(endMoment)) return;
+
+//       let currentMonth = joiningDate.clone().startOf('month');
+//       const endMonth = endMoment.clone().startOf('month');
+
+//       while (currentMonth.isSameOrBefore(endMonth, 'month')) {
+//         const monthYearKey = `${buddie._id}-${currentMonth.format('YYYY-MM')}`;
+//         const isPaymentMade = paymentMap.has(monthYearKey);
+
+//         // Check if this month is within the selected range and unpaid
+//         if (!isPaymentMade && currentMonth.isBetween(startMoment, endMoment, 'month', '[]')) {
+//           unpaidBuddies.push({
+//             buddie_name: buddie.buddie_name,
+//             contact: buddie.buddie_contact,
+//             room_no: buddie.room_no || 'N/A',
+//             status: 'Unpaid',
+//             pending_amount: 'Full Month',
+//             payment_date: currentMonth.date(dueDay).toDate(),
+//           });
+//         }
+
+//         currentMonth.add(1, 'month');
+//       }
+//     });
+
+//     res.json(unpaidBuddies);
+//   } catch (error) {
+//     console.error('Error fetching unpaid buddies by date range:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+
+
+
+
+router.get('/unpaid-buddies-by-date-range', async (req, res) => {
+  try {
+    const { hostelId, startDate, endDate } = req.query;
+
+    if (!hostelId || !startDate || !endDate) {
+      return res.status(400).json({ error: 'Hostel ID, Start Date, and End Date are required' });
     }
 
     if (!mongoose.Types.ObjectId.isValid(hostelId)) {
       return res.status(400).json({ error: 'Invalid Hostel ID' });
     }
 
-    const selectedDate = moment(date, 'YYYY-MM-DD').startOf('day');
-    if (!selectedDate.isValid()) {
-      return res.status(400).json({ error: 'Invalid date format' });
+    const startMoment = moment(startDate, 'YYYY-MM-DD').startOf('month');
+    const endMoment = moment(endDate, 'YYYY-MM-DD').endOf('month');
+
+    if (!startMoment.isValid() || !endMoment.isValid() || startMoment.isAfter(endMoment)) {
+      return res.status(400).json({ error: 'Invalid date range' });
     }
 
+    // 1. Get all approved buddies for the hostel
     const buddies = await Buddie.find({ hostel_id: hostelId, approved: true });
 
-    const payments = await Payment.aggregate([
-      {
-        $match: {
-          hostel_id: new mongoose.Types.ObjectId(hostelId),
-          status: 'accepted',
-        },
-      },
-      {
-        $group: {
-          _id: '$buddie_id',
-          lastPaymentDate: { $max: '$date' },
-        },
-      },
-    ]);
-
-    const paymentMap = new Map(
-      payments.map((payment) => [payment._id.toString(), moment(payment.lastPaymentDate)])
-    );
-
-    const unpaidBuddies = buddies.filter((buddie) => {
-      const joiningDate = moment(buddie.buddie_doj).startOf('day');
-      let lastPaymentDate = paymentMap.get(buddie._id.toString()) || joiningDate;
-
-      // Normalize last payment date to day-of-month for consistency
-      const dayOfJoining = joiningDate.date();
-
-      // Move the last payment date forward month by month
-      while (lastPaymentDate.isBefore(selectedDate, 'month')) {
-        lastPaymentDate.add(1, 'month').date(dayOfJoining);
-      }
-
-      // Check if the due date matches the selected date exactly
-      return lastPaymentDate.isSame(selectedDate, 'day');
+    // 2. Get all payments in the range
+    const payments = await Payment.find({
+      hostel_id: hostelId,
+      month: { $gte: startMoment.format('YYYY-MM'), $lte: endMoment.format('YYYY-MM') },
     });
 
-    const result = unpaidBuddies.map((buddie) => ({
-      name: buddie.buddie_name,
-      contact: buddie.buddie_contact,
-      roomNumber: buddie.room_no || 'N/A',
-      dateOfJoining: buddie.buddie_doj,
-    }));
+    // 3. Group payments by (buddie_id + month) => payment object
+    const paymentMap = new Map();
+    payments.forEach((payment) => {
+      const key = `${payment.buddie_id}-${payment.month}`;
+      paymentMap.set(key, payment);
+    });
 
-    res.json(result);
+    // 4. Identify only unpaid/partial months for each buddy
+    const unpaidBuddies = [];
+
+    buddies.forEach((buddie) => {
+      const joiningDate = moment(buddie.buddie_doj).startOf('month');
+      if (joiningDate.isAfter(endMoment)) return; // Joined after range, skip
+
+      let currentMonth = moment.max(joiningDate, startMoment).clone(); // Start from DOJ or StartDate, whichever is later
+
+      while (currentMonth.isSameOrBefore(endMoment, 'month')) {
+        const monthKey = `${buddie._id}-${currentMonth.format('YYYY-MM')}`;
+        const payment = paymentMap.get(monthKey);
+
+        if (!payment) {
+          // No payment at all - unpaid month
+          unpaidBuddies.push({
+            buddie_name: buddie.buddie_name,
+            contact: buddie.buddie_contact,
+            room_no: buddie.room_no || 'N/A',
+            status: 'Unpaid',
+            pending_amount: buddie.rent_amount,
+            month: currentMonth.format('YYYY-MM'),
+          });
+        } else if (payment.status === 'partial') {
+          // Partial payment - still pending amount
+          unpaidBuddies.push({
+            buddie_name: buddie.buddie_name,
+            contact: buddie.buddie_contact,
+            room_no: buddie.room_no || 'N/A',
+            status: 'Partial',
+            pending_amount: payment.pending_amount,
+            month: currentMonth.format('YYYY-MM'),
+          });
+        }
+
+        // If status is "accepted", we don't add it (i.e., skip)
+
+        currentMonth.add(1, 'month');
+      }
+    });
+
+    res.json(unpaidBuddies);
   } catch (error) {
-    console.error('Error fetching unpaid buddies by date:', error);
+    console.error('❌ Error fetching unpaid buddies by date range:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

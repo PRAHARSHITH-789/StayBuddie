@@ -92,398 +92,6 @@ const RoomManagement = () => {
 
 
 
-  // const getRooms = async () => {
-
-  //   setLoading(true); // Set loading state to true before fetching
-
-  //   try {
-  //     const hostel_id = localStorage.getItem('hostel_id');
-  //     const token = localStorage.getItem('authToken');
-
-  //     if (!hostel_id || ! process.env.REACT_APP_URL) {
-  //       // toast.error('No hostel_id found.');
-  //       console.log( process.env.REACT_APP_URL);
-  //     }
-
-  //     const response = await axios.get(`${ process.env.REACT_APP_URL}/admin/rooms`, {
-  //       params: { hostel_id },
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
-  //       },
-  //     });
-
-  //     if (response.status !== 200) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     const roomsData = response.data;
-  //     setRooms(roomsData); // Update the state with the fetched rooms
-  //   } catch (error) {
-  //     console.error('Error fetching rooms:', error);
-  //   } finally {
-  //     setLoading(false); // Set loading state to false after fetching
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getRooms();
-  // }, []);
-
-
-
-
-  // Filtered rooms based on search term
-
-
-
-  // Fetch rooms function
-
-
-
-
-  // const [rooms, setRooms] = useState([]);
-  // const [rooms, setrooms] = useState([]); // If you have filtering logic
-  // const [page, setPage] = useState(1);
-  // const [loading, setLoading] = useState(false);
-  // const [hasMore, setHasMore] = useState(true);
-
-
-
-
-
-  // const [rooms, setRooms] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const [page, setPage] = useState(1);
-  // const [hasMore, setHasMore] = useState(true);
-
-
-  // const loadingRef = useRef(null);
-
-  // const getRooms = useCallback(async (pageNumber = 1) => {
-  //   try {
-  //     const hostel_id = localStorage.getItem('hostel_id');
-  //     const token = localStorage.getItem('authToken');
-
-  //     if (!hostel_id || !process.env.REACT_APP_URL) {
-  //       console.log('Hostel ID or API URL is missing.');
-  //       return;
-  //     }
-
-  //     setLoading(true);
-
-  //     const response = await axios.get(`${process.env.REACT_APP_URL}/admin/rooms`, {
-  //       params: { hostel_id, page: pageNumber, limit: 10 },
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     if (response.status !== 200) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     const { rooms: fetchedRooms, currentPage, totalPages } = response.data;
-
-  //     // Prevent duplicates by filtering out already existing rooms
-  //     setRooms(prevRooms => {
-  //       const newRooms = fetchedRooms.filter(
-  //         fetchedRoom => !prevRooms.some(room => room._id === fetchedRoom._id)
-  //       );
-  //       return [...prevRooms, ...newRooms];
-  //     });
-
-  //     setPage(currentPage);
-  //     setHasMore(currentPage < totalPages);
-  //   } catch (error) {
-  //     console.log('Error fetching rooms:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, []);
-
-  // // Initial fetch
-  // useEffect(() => {
-  //   getRooms(page);
-  // }, [getRooms, page]);
-
-  // // Set up Intersection Observer
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(entries => {
-  //     if (entries[0].isIntersecting && !loading && hasMore) {
-  //       setPage(prevPage => prevPage + 1);
-  //     }
-  //   });
-
-  //   if (loadingRef.current) {
-  //     observer.observe(loadingRef.current);
-  //   }
-
-  //   return () => {
-  //     if (loadingRef.current) {
-  //       observer.unobserve(loadingRef.current);
-  //     }
-  //   };
-  // }, [loading, hasMore]);
-
-
-
-
-  // const [rooms, setRooms] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const [page, setPage] = useState(1);
-  // const [hasMore, setHasMore] = useState(true);
-
-  // const loadingRef = useRef(null);
-
-  // const getRooms = useCallback(async (pageNumber = 1) => {
-  //   try {
-  //     const hostel_id = localStorage.getItem('hostel_id');
-  //     const token = localStorage.getItem('authToken');
-
-  //     if (!hostel_id || !process.env.REACT_APP_URL) {
-  //       console.log('Hostel ID or API URL is missing.');
-  //       return;
-  //     }
-
-  //     setLoading(true);
-
-  //     const response = await axios.get(`${process.env.REACT_APP_URL}/admin/rooms`, {
-  //       params: { hostel_id, page: pageNumber, limit: 10 },
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     if (response.status !== 200) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     const { rooms: fetchedRooms, currentPage, totalPages } = response.data;
-
-  //     // Prevent duplicates by filtering out already existing rooms
-  //     setRooms(prevRooms => {
-  //       const newRooms = fetchedRooms.filter(
-  //         fetchedRoom => !prevRooms.some(room => room._id === fetchedRoom._id)
-  //       );
-  //       return [...prevRooms, ...newRooms];
-  //     });
-
-  //     setHasMore(currentPage < totalPages);
-  //   } catch (error) {
-  //     console.log('Error fetching rooms:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, []);
-
-  // // Initial fetch when component mounts
-  // useEffect(() => {
-  //   getRooms(1);
-  // }, [getRooms]);
-
-  // // Intersection Observer for infinite scrolling
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(entries => {
-  //     if (entries[0].isIntersecting && !loading && hasMore) {
-  //       setPage(prevPage => prevPage + 1);
-  //       getRooms(page + 1); // Fetch the next page explicitly here
-  //     }
-  //   });
-
-  //   if (loadingRef.current) {
-  //     observer.observe(loadingRef.current);
-  //   }
-
-  //   return () => {
-  //     if (loadingRef.current) {
-  //       observer.unobserve(loadingRef.current);
-  //     }
-  //   };
-  // }, [loading, hasMore, getRooms, page]);
-
-
-
-
-  // const [rooms, setRooms] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const [page, setPage] = useState(1);
-  // const [hasMore, setHasMore] = useState(true);
-
-  // const loadingRef = useRef(null);
-
-  // const getRooms = useCallback(async (pageNumber = 1) => {
-  //   if (!hasMore || loading) return; // Exit if already loading or no more pages are available
-
-  //   try {
-  //     const hostel_id = localStorage.getItem('hostel_id');
-  //     const token = localStorage.getItem('authToken');
-
-  //     if (!hostel_id || !process.env.REACT_APP_URL) {
-  //       console.log('Hostel ID or API URL is missing.');
-  //       return;
-  //     }
-
-  //     setLoading(true);
-
-  //     const response = await axios.get(`${process.env.REACT_APP_URL}/admin/rooms`, {
-  //       params: { hostel_id, page: pageNumber, limit: 10 },
-  //       headers: { 'Authorization': `Bearer ${token}` },
-  //     });
-
-  //     if (response.status !== 200) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     const { rooms: fetchedRooms, currentPage, totalPages } = response.data;
-
-  //     // If no rooms are fetched, set `hasMore` to false
-  //     if (fetchedRooms.length === 0) {
-  //       setHasMore(false);
-  //       return;
-  //     }
-
-  //     setRooms(prevRooms => [
-  //       ...prevRooms,
-  //       ...fetchedRooms.filter(fetchedRoom => !prevRooms.some(room => room._id === fetchedRoom._id)),
-  //     ]);
-
-  //     setHasMore(currentPage < totalPages); // Check if there are more pages
-  //   } catch (error) {
-  //     console.log('Error fetching rooms:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, [hasMore, loading]);
-
-  // useEffect(() => {
-  //   getRooms(1);
-  // }, [getRooms]);
-
-  // // Intersection Observer for infinite scrolling
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(entries => {
-  //     if (entries[0].isIntersecting && !loading && hasMore) {
-  //       setPage(prevPage => prevPage + 1);
-  //       getRooms(page + 1); // Fetch the next page explicitly here
-  //     }
-  //   });
-
-  //   if (loadingRef.current) {
-  //     observer.observe(loadingRef.current);
-  //   }
-
-  //   return () => {
-  //     if (loadingRef.current) {
-  //       observer.unobserve(loadingRef.current);
-  //     }
-  //   };
-  // }, [loading, hasMore, getRooms, page]);
-
-
-
-
-  // Filtering rooms based on search
-  // const rooms = rooms.filter(room => {
-  //   const searchLower = search.toLowerCase();
-  //   const roomNumber = String(room.room_number).toLowerCase();
-  //   const roomVacancy = String(room.room_vacancy).toLowerCase();
-
-  //   return roomNumber.includes(searchLower) || roomVacancy.includes(searchLower);
-  // });
-
-
-  // const getRooms = useCallback(async (pageNumber = 1) => {
-
-
-  //   try {
-  //     const hostel_id = localStorage.getItem('hostel_id');
-  //     const token = localStorage.getItem('authToken');
-
-  //     if (!hostel_id || !process.env.REACT_APP_URL) {
-  //       // console.error('Hostel ID or API URL is missing.');
-  //       console.log('Hostel ID or API URL is missing.');
-  //       return;
-  //     }
-
-  //     setLoading(true);
-
-  //     const response = await axios.get(`${process.env.REACT_APP_URL}/admin/rooms`, {
-  //       params: { hostel_id, page: pageNumber, limit: 10 }, // Specify limit if needed
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     if (response.status !== 200) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //       setLoading(false);
-  //     }
-
-  //     const { rooms: fetchedRooms, currentPage, totalPages } = response.data;
-
-  //     // Prevent duplicates by filtering out already existing rooms
-  //     setRooms(prevRooms => {
-  //       setLoading(true);
-  //       const newRooms = fetchedRooms.filter(
-  //         fetchedRoom => !prevRooms.some(room => room._id === fetchedRoom._id)
-  //       );
-  //       return [...prevRooms, ...newRooms];
-  //     });
-
-  //     setPage(currentPage);
-  //     setHasMore(currentPage < totalPages);
-  //   } catch (error) {
-  //     // console.error('Error fetching rooms:', error);
-  //     console.log('Error fetching rooms:', error);
-  //     setLoading(false);
-
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, []);
-
-  // // Initial fetch
-  // useEffect(() => {
-  //   getRooms(page);
-  // }, [getRooms, page]);
-
-
-
-
-  // // Handle scroll event for infinite scrolling
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (
-  //       window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-  //       !loading &&
-  //       hasMore
-  //     ) {
-  //       setPage(prevPage => prevPage + 1);
-  //     }
-  //   };
-
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, [loading, hasMore]);
-
-  // // Optional: If you have filtering logic that affects `rooms`
-  // useEffect(() => {
-  //   // Example: simple filter based on some criteria
-  //   // setrooms(rooms.filter(room => /* your filter condition */));
-  //   setrooms(rooms); // If no filtering, directly set rooms
-  // }, [rooms]);
-
-
-  // const rooms1 = rooms.filter(room => {
-  //   const searchLower = search.toLowerCase();
-  //   const roomNumber = String(room.room_number).toLowerCase();
-  //   const roomVacancy = String(room.room_vacancy).toLowerCase();
-
-  //   return roomNumber.includes(searchLower) || roomVacancy.includes(searchLower);
-  // });
-
-
-
   const hostel_id = localStorage.getItem('hostel_id');
   const token = localStorage.getItem('authToken');
   
@@ -521,69 +129,136 @@ const fetchRooms = () => {
 
 
 
+  // const handleSubmit = async () => {
+  //   if (!validateRoomData()) return;
+
+  //   try {
+  //     const hostel_id = localStorage.getItem('hostel_id'); // Retrieve hostel_id from local storage
+  //     const token = localStorage.getItem('authToken'); // Retrieve token from local storage
+
+  //     if (!hostel_id) {
+  //       toast.error('No hostel_id found.');
+  //       return;
+  //     }
+
+  //     // Validate room data
+  //     if (!roomData.room_number || !roomData.room_sharing || !roomData.room_vacancy) {
+  //       toast.error('Incomplete room data.');
+  //       return;
+  //     }
+
+  //     setLoading1(true);
+
+  //     // console.log('Sending data:', { ...roomData, hostel_id });
+
+  //     // Send POST request to add a new room
+  //     const response = await fetch(`${process.env.REACT_APP_URL}/admin/addRoom`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+  //       },
+  //       body: JSON.stringify({ ...roomData, hostel_id }),
+  //     });
+
+  //     if (!response.ok) {
+  //       setLoading1(false);
+  //       const errorResponse = await response.json();
+  //       toast.error(`Error: ${errorResponse.message || 'An error occurred'}`);
+  //       throw new Error(`HTTP error! status: ${response.status} - ${errorResponse.message || 'An error occurred'}`);
+  //     }
+
+  //     const newRoom = await response.json();
+  //     // console.log('New room added:', newRoom);
+
+  //     // Update the rooms state with the new room
+  //     setRooms((prevRooms) => [...prevRooms, { ...roomData, _id: newRoom._id }]);
+
+  //     // Reset the form data
+  //     setRoomData({
+  //       room_number: '',
+  //       room_sharing: '',
+  //       room_vacancy: '',
+  //     });
+
+  //     handleClose(); // Close the modal or form after adding the room
+
+  //     // Show success toast message
+  //     toast.success('Room added successfully.');
+
+  //   } catch (error) {
+  //     console.error('Error adding room:', error);
+  //     setLoading1(false);
+  //   }
+  //   setLoading1(false);
+  // };
+
+
+
   const handleSubmit = async () => {
     if (!validateRoomData()) return;
-
+  
     try {
-      const hostel_id = localStorage.getItem('hostel_id'); // Retrieve hostel_id from local storage
-      const token = localStorage.getItem('authToken'); // Retrieve token from local storage
-
+      const hostel_id = localStorage.getItem('hostel_id');
+      const token = localStorage.getItem('authToken');
+  
       if (!hostel_id) {
         toast.error('No hostel_id found.');
         return;
       }
-
-      // Validate room data
-      if (!roomData.room_number || !roomData.room_sharing || !roomData.room_vacancy) {
+  
+      if (!roomData.room_number || !roomData.room_sharing) {
         toast.error('Incomplete room data.');
         return;
       }
-
+  
       setLoading1(true);
-
-      // console.log('Sending data:', { ...roomData, hostel_id });
-
-      // Send POST request to add a new room
+  
+      // Auto-set room_vacancy to room_sharing value
+      const finalRoomData = {
+        ...roomData,
+        room_vacancy: roomData.room_sharing,
+        hostel_id,
+      };
+  
       const response = await fetch(`${process.env.REACT_APP_URL}/admin/addRoom`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...roomData, hostel_id }),
+        body: JSON.stringify(finalRoomData),
       });
-
+  
       if (!response.ok) {
-        setLoading1(false);
         const errorResponse = await response.json();
         toast.error(`Error: ${errorResponse.message || 'An error occurred'}`);
         throw new Error(`HTTP error! status: ${response.status} - ${errorResponse.message || 'An error occurred'}`);
       }
-
+  
       const newRoom = await response.json();
-      // console.log('New room added:', newRoom);
-
-      // Update the rooms state with the new room
-      setRooms((prevRooms) => [...prevRooms, { ...roomData, _id: newRoom._id }]);
-
-      // Reset the form data
+  
+      setRooms((prevRooms) => [
+        ...prevRooms,
+        { ...finalRoomData, _id: newRoom._id },
+      ]);
+  
       setRoomData({
         room_number: '',
         room_sharing: '',
-        room_vacancy: '',
       });
-
-      handleClose(); // Close the modal or form after adding the room
-
-      // Show success toast message
+  
+      handleClose();
       toast.success('Room added successfully.');
-
     } catch (error) {
       console.error('Error adding room:', error);
+      toast.error('Failed to add room.');
+    } finally {
       setLoading1(false);
     }
-    setLoading1(false);
   };
+  
+
 
 
 
@@ -776,30 +451,7 @@ const fetchRooms = () => {
           <>
             <HeaderSub />
 
-            {/* <Dialog open={isLocationDialogOpen} onClose={handleLocationDialogClose} fullWidth={true} maxWidth="sm">
-              <DialogTitle>Select a City</DialogTitle>
-              <DialogContent>
-                <List>
-                  <ListItem button selected={selectedCity === 'Hyderabad'} onClick={() => handleCitySelect('Hyderabad')}>
-                    <ListItemText primary="Hyderabad" />
-                  </ListItem>
-                  <ListItem button selected={selectedCity === 'Mumbai'} onClick={() => handleCitySelect('Mumbai')}>
-                    <ListItemText primary="Mumbai" />
-                  </ListItem>
-                  <ListItem button selected={selectedCity === 'Chennai'} onClick={() => handleCitySelect('Chennai')}>
-                    <ListItemText primary="Chennai" />
-                  </ListItem>
-                </List>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleLocationDialogClose} color="primary">
-                  Cancel
-                </Button>
-                <Button onClick={handleLocationConfirm} color="primary">
-                  Confirm
-                </Button>
-              </DialogActions>
-            </Dialog> */}
+        
           </>
 
 
@@ -830,443 +482,6 @@ const fetchRooms = () => {
               }}
             />
           </Box>
-
-          {/* <Box padding={2} display="flex" flexDirection="column" gap={2} mb={6}>
-            {loading ? (
-              Array.from(new Array(5)).map((_, index) => (
-                <Card
-                  key={index}
-                  variant="outlined"
-                  sx={{ display: 'flex', justifyContent: 'space-between', padding: 2, alignItems: 'center', boxShadow: 3, borderRadius: 2 }}
-                >
-                  <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <Skeleton variant="text" width={100} height={20} />
-                    <Skeleton variant="text" width={80} height={20} />
-                    <Skeleton variant="text" width={80} height={20} />
-                  </CardContent>
-                  <Box display="flex" flexDirection="column" justifyContent="center">
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <IconButton sx={{ backgroundColor: '#F57C00', color: 'white' }}>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton sx={{ backgroundColor: '#D32F2F', color: 'white' }}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                </Card>
-              ))
-            ) : rooms.length > 0 ? (
-              rooms.map((room) => (
-                <Card
-                  key={room._id}
-                  variant="outlined"
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: 2,
-                    alignItems: 'center',
-                    boxShadow: 3,
-                    borderRadius: 2,
-                  }}
-                >
-                  <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <Chip
-                      icon={<DoorBack />}
-                      label={`Room ${room.room_number}`}
-                      variant="outlined"
-                      color="primary"
-                      sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}
-                    />
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <People color="action" />
-                      <Typography variant="body2">Sharing: {room.room_sharing}</Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <HomeWork color="action" />
-                      <Typography variant="body2">Vacancy: {room.room_vacancy}</Typography>
-                    </Box>
-                  </CardContent>
-                  <Box display="flex" flexDirection="column" justifyContent="center">
-                    <Box sx={{ display: 'flex', gap: 1 }}>
-                      <IconButton
-                        onClick={() => handleEdit(room)}
-                        sx={{
-                          backgroundColor: '#F57C00',
-                          color: 'white',
-                          '&:hover': { backgroundColor: '#FFB300' },
-                          boxShadow: 1,
-                        }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => openConfirmDialog(room._id)}
-                        sx={{
-                          backgroundColor: '#D32F2F',
-                          color: 'white',
-                          '&:hover': { backgroundColor: '#E57373' },
-                          boxShadow: 1,
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                </Card>
-              ))
-            ) : (
-              <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={4}>
-                <img src={notFound} alt="No Rooms Found" style={{ width: '350px', height: '350px', marginBottom: '16px' }} />
-                <Typography variant="h6" color="textSecondary">No Rooms Found</Typography>
-              </Box>
-            )}
-         </Box> */}
-
-
-
-          {/* <Box padding={2} display="flex" flexDirection="column" gap={2} mb={6}>
-      {rooms.length === 0 && !loading ? (
-        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={4}>
-          <img src={notFound} alt="No Rooms Found" style={{ width: '350px', height: '350px', marginBottom: '16px' }} />
-          <Typography variant="h6" color="textSecondary">No Rooms Found</Typography>
-        </Box>
-      ) : (
-        <>
-          {rooms.map((room) => (
-            <Card
-              key={room._id}
-              variant="outlined"
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                padding: 2,
-                alignItems: 'center',
-                boxShadow: 3,
-                borderRadius: 2,
-              }}
-            >
-              <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Chip
-                  icon={<DoorBack style={{color:'darkcyan'}}/>}
-                  label={`Room ${room.room_number}`}
-                  variant="outlined"
-                  // color="primary"
-                  style={{color:'darkcyan',borderColor:'darkcyan'}}
-                  sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}
-                />
-                <Box display="flex" alignItems="center" gap={1}>
-                  <People color="action" />
-                  <Typography variant="body2">Sharing: {room.room_sharing}</Typography>
-                </Box>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <HomeWork color="action" />
-                  <Typography variant="body2">Vacancy: {room.room_vacancy}</Typography>
-                </Box>
-              </CardContent>
-              <Box display="flex" flexDirection="column" justifyContent="center">
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <IconButton
-                    onClick={() => handleEdit(room)}
-                    sx={{
-                      backgroundColor: 'slategrey',
-                      color: 'white',
-                      '&:hover': { backgroundColor: '#FFB300' },
-                      boxShadow: 1,
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => openConfirmDialog(room._id)}
-                    sx={{
-                      backgroundColor: 'tomato',
-                      color: 'white',
-                      '&:hover': { backgroundColor: '#E57373' },
-                      boxShadow: 1,
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-              </Box>
-            </Card>
-          ))}
-
-
-
-
-          {loading && (
-
-
-Array.from(new Array(5)).map((_, index) => (
-  <Card
-    key={index}
-    variant="outlined"
-    sx={{ display: 'flex', justifyContent: 'space-between', padding: 2, alignItems: 'center', boxShadow: 3, borderRadius: 2 }}
-  >
-    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-      <Skeleton variant="text" width={100} height={20} />
-      <Skeleton variant="text" width={80} height={20} />
-      <Skeleton variant="text" width={80} height={20} />
-    </CardContent>
-  </Card>
-))
-                   
-          )}
-
-
-
-        </>
-      )}
-    </Box> */}
-
-
-
-
-          {/* <Box padding={2} display="flex" flexDirection="column" gap={2} mb={6}>
-  {loading ? (
-    // Show skeleton loaders while loading
-    Array.from(new Array(5)).map((_, index) => (
-      <Card
-        key={index}
-        variant="outlined"
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          padding: 2,
-          alignItems: 'center',
-          boxShadow: 3,
-          borderRadius: 2,
-        }}
-      >
-        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <Skeleton variant="text" width={100} height={20} />
-          <Skeleton variant="text" width={80} height={20} />
-          <Skeleton variant="text" width={80} height={20} />
-        </CardContent>
-      </Card>
-    ))
-  ) : rooms.length === 0 ? (
-    // Show no data image if loading is done and no data is available
-    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={4}>
-      <img src={notFound} alt="No Rooms Found" style={{ width: '350px', height: '350px', marginBottom: '16px' }} />
-      <Typography variant="h6" color="textSecondary">No Rooms Found</Typography>
-    </Box>
-  ) : (
-    // Display data if loading is done and data is available
-    rooms.map((room) => (
-      <Card
-        key={room._id}
-        variant="outlined"
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          padding: 2,
-          alignItems: 'center',
-          boxShadow: 3,
-          borderRadius: 2,
-        }}
-      >
-        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <Chip
-            icon={<DoorBack style={{ color: 'darkcyan' }} />}
-            label={`Room ${room.room_number}`}
-            variant="outlined"
-            style={{ color: 'darkcyan', borderColor: 'darkcyan' }}
-            sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}
-          />
-          <Box display="flex" alignItems="center" gap={1}>
-            <People color="action" />
-            <Typography variant="body2">Sharing: {room.room_sharing}</Typography>
-          </Box>
-          <Box display="flex" alignItems="center" gap={1}>
-            <HomeWork color="action" />
-            <Typography variant="body2">Vacancy: {room.room_vacancy}</Typography>
-          </Box>
-        </CardContent>
-        <Box display="flex" flexDirection="column" justifyContent="center">
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <IconButton
-              onClick={() => handleEdit(room)}
-              sx={{
-                backgroundColor: 'slategrey',
-                color: 'white',
-                '&:hover': { backgroundColor: '#FFB300' },
-                boxShadow: 1,
-              }}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => openConfirmDialog(room._id)}
-              sx={{
-                backgroundColor: 'tomato',
-                color: 'white',
-                '&:hover': { backgroundColor: '#E57373' },
-                boxShadow: 1,
-              }}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      </Card>
-    ))
-  )}
-</Box> */}
-
-
-
-          {/* <Box padding={2} display="flex" flexDirection="column" gap={2} mb={6}>
-      {loading && (
-        // Show skeleton loaders while loading
-        Array.from(new Array(5)).map((_, index) => (
-          <Card key={index} variant="outlined" sx={{ display: 'flex', padding: 2, boxShadow: 3 }}>
-            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Skeleton variant="text" width={100} height={20} />
-              <Skeleton variant="text" width={80} height={20} />
-              <Skeleton variant="text" width={80} height={20} />
-            </CardContent>
-          </Card>
-        ))
-      )}
-
-<Grid container spacing={2}>
-
-      {rooms.length === 0 && !loading ? (
-        // Show no data image if loading is done and no data is available
-        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={4}>
-          <img src="notFoundImage.png" alt="No Rooms Found" style={{ width: '350px', height: '350px', marginBottom: '16px' }} />
-          <Typography variant="h6" color="textSecondary">No Rooms Found</Typography>
-        </Box>
-      ) : (
-        // Display data if loading is done and data is available
-       
-        rooms.map((room) => (
-          <Grid item xs={12} sm={6} md={3} key={room._id}>
-          <Card
-          key={room._id}
-          variant="outlined"
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: 2,
-            alignItems: 'center',
-            boxShadow: 3,
-            borderRadius: 2,
-          }}
-        >
-          <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Chip
-              icon={<DoorBack style={{color:'darkcyan'}}/>}
-              label={`Room ${room.room_number}`}
-              variant="outlined"
-              // color="primary"
-              style={{color:'darkcyan',borderColor:'darkcyan'}}
-              sx={{ fontSize: '0.875rem', fontWeight: 'bold' }}
-            />
-            <Box display="flex" alignItems="center" gap={1}>
-              <People color="action" />
-              <Typography variant="body2">Sharing: {room.room_sharing}</Typography>
-            </Box>
-            <Box display="flex" alignItems="center" gap={1}>
-              <HomeWork color="action" />
-              <Typography variant="body2">Vacancy: {room.room_vacancy}</Typography>
-            </Box>
-          </CardContent>
-          <Box display="flex" flexDirection="column" justifyContent="center">
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton
-                onClick={() => handleEdit(room)}
-                sx={{
-                  backgroundColor: 'slategrey',
-                  color: 'white',
-                  '&:hover': { backgroundColor: '#FFB300' },
-                  boxShadow: 1,
-                }}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                onClick={() => openConfirmDialog(room._id)}
-                sx={{
-                  backgroundColor: 'tomato',
-                  color: 'white',
-                  '&:hover': { backgroundColor: '#E57373' },
-                  boxShadow: 1,
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          </Box>
-        </Card>
-        </Grid>
-        ))
-      )}
-      </Grid>
-      {hasMore && (
-        <div ref={loadingRef} style={{ textAlign: 'center', padding: '16px' }}>
-          {loading && <CircularProgress />} 
-        </div>
-      )}
-    </Box> */}
-
-          {/* <Box padding={2} display="flex" flexDirection="column" gap={2} mb={6}>
-      {loading && Array.from(new Array(5)).map((_, index) => (
-        <Card key={index} variant="outlined" sx={{ display: 'flex', padding: 2, boxShadow: 3 }}>
-          <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Skeleton variant="text" width={100} height={20} />
-            <Skeleton variant="text" width={80} height={20} />
-            <Skeleton variant="text" width={80} height={20} />
-          </CardContent>
-        </Card>
-      ))}
-
-      <Grid container spacing={2}>
-        {rooms.length === 0 && !loading ? (
-          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={4}>
-            <img src="notFoundImage.png" alt="No Rooms Found" style={{ width: '350px', height: '350px', marginBottom: '16px' }} />
-            <Typography variant="h6" color="textSecondary">No Rooms Found</Typography>
-          </Box>
-        ) : (
-          rooms.map(room => (
-            <Grid item xs={12} sm={6} md={3} key={room._id}>
-              <Card variant="outlined" sx={{ display: 'flex', justifyContent: 'space-between', padding: 2, alignItems: 'center', boxShadow: 3, borderRadius: 2 }}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Chip icon={<DoorBack style={{ color: 'darkcyan' }} />} label={`Room ${room.room_number}`} variant="outlined" style={{ color: 'darkcyan', borderColor: 'darkcyan' }} sx={{ fontSize: '0.875rem', fontWeight: 'bold' }} />
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <People color="action" />
-                    <Typography variant="body2">Sharing: {room.room_sharing}</Typography>
-                  </Box>
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <HomeWork color="action" />
-                    <Typography variant="body2">Vacancy: {room.room_vacancy}</Typography>
-                  </Box>
-                </CardContent>
-                <Box display="flex" flexDirection="column" justifyContent="center">
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton onClick={() => handleEdit(room)} sx={{ backgroundColor: 'slategrey', color: 'white', '&:hover': { backgroundColor: '#FFB300' }, boxShadow: 1 }}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => openConfirmDialog(room._id)} sx={{ backgroundColor: 'tomato', color: 'white', '&:hover': { backgroundColor: '#E57373' }, boxShadow: 1 }}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </Card>
-            </Grid>
-          ))
-        )}
-      </Grid>
-
-      {hasMore && (
-        <div ref={loadingRef} style={{ textAlign: 'center', padding: '16px' }}>
-          {loading && <CircularProgress />}
-        </div>
-      )}
-    </Box> */}
 
 <Box padding={2} display="flex" flexDirection="column" gap={2} mb={6}>
     {loading && rooms.length === 0 && Array.from(new Array(5)).map((_, index) => (
@@ -1350,7 +565,7 @@ endMessage={
             <DialogTitle>Add New Room</DialogTitle>
             <DialogContent>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="Room Number"
@@ -1378,7 +593,38 @@ endMessage={
                     value={roomData.room_vacancy}
                     onChange={handleChange}
                   />
-                </Grid>
+                </Grid> */}
+
+
+<Grid item xs={12}>
+  <TextField
+    fullWidth
+    label="Room Number"
+    name="room_number"
+    value={roomData.room_number}
+    onChange={handleChange}
+  />
+</Grid>
+<Grid item xs={12}>
+  <TextField
+    fullWidth
+    label="Room Sharing"
+    name="room_sharing"
+    type="number"
+    value={roomData.room_sharing}
+    onChange={(e) => {
+      const { value } = e.target;
+      setRoomData({
+        ...roomData,
+        room_sharing: value,
+        room_vacancy: value, // Automatically set vacancy to sharing value
+      });
+    }}
+  />
+</Grid>
+
+
+
               </Grid>
             </DialogContent>
             <DialogActions>
