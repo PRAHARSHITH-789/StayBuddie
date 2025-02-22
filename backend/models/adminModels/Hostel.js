@@ -50,7 +50,7 @@ hostelSchema.pre('save', async function(next) {
     // Generate QR code if not already created
     if (!hostel.hostel_qr_code) {
         // Define the base URL for adding a Buddie, and include the hostel ID in the URL
-        // const addBuddieUrl = `https://localhost:3000/addBuddie?hostel_id=${hostel._id}`;
+        // const addBuddieUrl = `http://192.168.29.11:3000/addBuddie/${hostel._id}`;
         const addBuddieUrl = `https://staybuddie.in/addBuddie/${hostel._id}`; // need to change URF for PROD
 
         // Generate the QR code and store it as a base64 string

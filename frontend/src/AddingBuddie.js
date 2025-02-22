@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import  Avatar  from 'react-avatar';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 import { ToastContainer } from 'react-toastify';
@@ -282,6 +283,8 @@ const {hostel_id} = useParams();
 
 
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
+
   const handleAddBuddie = async () => {
     let isValid = true;
     const newErrors = {};
@@ -294,31 +297,29 @@ const {hostel_id} = useParams();
         newErrors[key] = errorMsg;
       }
     });
-
+  
     setErrors(newErrors);
   
     if (isValid) {
+      setIsSubmitting(true); // Start loading
+  
       try {
-
         if (!hostel_id) {
-          throw new Error('Missing hostel_id or token.');
+          throw new Error('Missing hostel_id.');
         }
   
-        // Prepare the data to send, including hostel_id
         const dataToSend = { ...formData, hostel_id: hostel_id };
   
-        // Send POST request to add a new buddie
-        const response = await axios.post(`${ process.env.REACT_APP_URL}/admin/addOutsideBuddie`, dataToSend, {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/admin/addOutsideBuddie`, dataToSend, {
           headers: {
-            // 'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
             'Content-Type': 'application/json',
           },
         });
   
-        // Update the state with the new buddie
         setBuddies((prevBuddies) => [...prevBuddies, response.data]);
         toast.success('Buddie added successfully!');
-       setFormData({
+  
+        setFormData({
           buddie_name: '',
           buddie_dob: '',
           buddie_gender: '',
@@ -332,27 +333,22 @@ const {hostel_id} = useParams();
           buddie_photo: null,
           buddie_password: '',
           buddie_confirm_password: '',
-          room_no: '', // Add room_no here,
-          buddie_doj:'',
+          room_no: '',
+          buddie_doj: '',
         });
-
-
-        setOpen(false); // Close the modal or form
+  
+        setOpen(false);
       } catch (error) {
         console.error('Error adding buddie:', error);
-        
-        // Check if error response exists and contains a message
-        if (error.response && error.response.data && error.response.data.message) {
-          toast.error(`Failed to add the buddie: ${error.response.data.message}`);
-        } else {
-          toast.error('Failed to add the buddie. Please try again.');
-        }
+        toast.error(error.response?.data?.message || 'Failed to add the buddie.');
+      } finally {
+        setIsSubmitting(false); // Stop loading
       }
     } else {
       toast.error('Please correct the highlighted errors.');
     }
   };
-  
+    
   
 
   const [selectedRoomNo, setSelectedRoomNo] = useState('');
@@ -671,7 +667,22 @@ const {hostel_id} = useParams();
                   </Button> */}
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAddBuddie}>Submit</Button>
+                    <Button 
+  variant="contained" 
+  color="primary" 
+  onClick={handleAddBuddie} 
+  disabled={isSubmitting} // Disable when submitting
+  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+>
+  {isSubmitting ? (
+    <>
+      <CircularProgress size={20} color="inherit" style={{ marginRight: 8 }} />
+      Adding...
+    </>
+  ) : (
+    'Add Buddie'
+  )}
+</Button>
                   </DialogActions>
 
                 </Box>

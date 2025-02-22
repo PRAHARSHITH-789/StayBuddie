@@ -669,6 +669,8 @@ router.post('/addOutsideBuddie', async (req, res) => {
   }
 });
 
+
+
 // Update Buddies
 router.put('/updateBuddie/:id', verifyToken, async (req, res) => {
   const buddieId = req.params.id;
@@ -935,20 +937,33 @@ router.get('/unapprovedBuddies', async (req, res) => {
   }
 });
 
-// approved buddies which are in inside
+// Approve a buddie and update room vacancy
 router.put('/approveBuddie/:buddieId', async (req, res) => {
   const { buddieId } = req.params;
 
   try {
-    // Find the Buddie by ID and set `approved` to true
-    const approvedBuddie = await Buddie.findByIdAndUpdate(
-      buddieId,
-      { approved: true },
-      { new: true }
-    );
-
+    // Find the Buddie by ID
+    const approvedBuddie = await Buddie.findById(buddieId);
     if (!approvedBuddie) {
       return res.status(404).json({ message: 'Buddie not found' });
+    }
+
+    // If already approved, no need to change anything
+    if (approvedBuddie.approved) {
+      return res.status(400).json({ message: 'Buddie is already approved' });
+    }
+
+    // Approve the buddie
+    approvedBuddie.approved = true;
+    await approvedBuddie.save();
+
+    // If buddie has a room assigned, decrease the room vacancy
+    if (approvedBuddie.room_no) {
+      const room = await Room.findOne({ room_number: approvedBuddie.room_no, hostel_id: approvedBuddie.hostel_id });
+      if (room && room.room_vacancy > 0) {
+        room.room_vacancy -= 1;
+        await room.save();
+      }
     }
 
     res.status(200).json(approvedBuddie);
@@ -958,25 +973,26 @@ router.put('/approveBuddie/:buddieId', async (req, res) => {
   }
 });
 
-// delete buddie
-// router.delete('/deleteBuddie/:buddieId', async (req, res) => {
-//   const { buddieId } = req.params;
 
-//   try {
-//     // Check if buddie exists
-//     const buddie = await Buddie.findById(buddieId);
-//     if (!buddie) {
-//       return res.status(404).json({ message: 'Buddie not found' });
-//     }
+delete buddie
+router.delete('/deleteBuddie/:buddieId', async (req, res) => {
+  const { buddieId } = req.params;
 
-//     // Delete the buddie
-//     await Buddie.findByIdAndDelete(buddieId);
-//     return res.json({ message: 'Buddie deleted successfully' });
-//   } catch (error) {
-//     console.error('Error deleting buddie:', error);
-//     return res.status(500).json({ message: 'Server error', error });
-//   }
-// });
+  try {
+    // Check if buddie exists
+    const buddie = await Buddie.findById(buddieId);
+    if (!buddie) {
+      return res.status(404).json({ message: 'Buddie not found' });
+    }
+
+    // Delete the buddie
+    await Buddie.findByIdAndDelete(buddieId);
+    return res.json({ message: 'Buddie deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting buddie:', error);
+    return res.status(500).json({ message: 'Server error', error });
+  }
+});
 
 //search buddie
 // router.get('/search-buddie', async (req, res) => {
