@@ -52,7 +52,7 @@ app.use(express.json({ limit: '20mb' })); // Increase the limit as needed
 app.use(express.urlencoded({ limit: '10mb', extended: true })); // Increase the limit as needed
 
 // MongoDB Connection
-mongoose.connect(`${process.env.MONGODB_URL}/Staybuddies`,{
+mongoose.connect(`${process.env.MONGODB_URL}`,{
     serverSelectionTimeoutMS: 30000 // Increase timeout to 30 seconds
 }).then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('Could not connect to MongoDB:', err));
