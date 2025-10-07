@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   TextField,
   Button,
@@ -280,27 +281,35 @@ const AddHostelForm = () => {
                     Object.values(formData).every(field => field !== '' && field !== null);
 
     if (isValid) {
+      
       try {
-        const response = await fetch(`${ process.env.REACT_APP_URL}/admin/create`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-          'Authorization': `Bearer ${token}`,
-        });
-        const result = await response.json();
-        if (response.ok) {
-          setAlertMessage('Form submitted successfully');
-          setAlertSeverity('success');
-          navigate('/thanks'); 
-          
-        } else {
-          setAlertMessage(result.message || 'An error occurred');
-          setAlertSeverity('error');
-        }
-      } catch (err) {
-        setAlertMessage('An error occurred');
-        setAlertSeverity('error');
-      }
+  console.log(formData);
+
+  // ✅ Send JSON body directly
+  const response = await axios.post(
+    `${process.env.REACT_APP_URL}/admin/create`,
+    formData, // not { formData }
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  console.log("✅ Response:", response.data);
+
+  // Axios automatically parses JSON
+  setAlertMessage("Form submitted successfully");
+  setAlertSeverity("success");
+
+  navigate("/thanks");
+
+} catch (err) {
+  console.error("❌ Error:", err);
+  setAlertMessage(err.response?.data?.message || "An error occurred");
+  setAlertSeverity("error");
+}
+
       setSnackbarOpen(true);
     } else {
       setAlertMessage('Please fill out all required fields');

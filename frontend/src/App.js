@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
 import Home from './Home';
 import AdminLogin from './admin/AdminLogin';
 import Dashboard from './admin/Dashboard';
@@ -71,7 +72,7 @@ const App = () => {
   useEffect(() => {
     // Create the socket connection only if user exists and no socket is currently connected
     if (user && !socket) {
-      const socketInstance = io('http://localhost:5002', {
+      const socketInstance = io( `${process.env.REACT_APP_URlSocket}`, {
         query: { userId: user },
       });
       setSocket(socketInstance);
@@ -95,7 +96,7 @@ const App = () => {
   useEffect(() => {
     // Create the socket connection only if user exists and no socket is currently connected
     if (buddie && !buddieSocket) {
-      const socketInstance = io('http://localhost:5002', {
+      const socketInstance = io(`${process.env.REACT_APP_URlSocket}`, {
         query: { userId: buddie },
       });
       setBuddieSocket(socketInstance);

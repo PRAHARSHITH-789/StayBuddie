@@ -68,13 +68,11 @@ const Dashboard = () => {
           throw new Error('Authentication token not found');
         }
 
-        const response = await axios.get(`${process.env.REACT_APP_URL}/admin/dashboard`, {
-          params: { hostel_id },
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
+        const response = await axios.get(`${process.env.REACT_APP_URL}/admin/dashboard?hostel_id=${hostel_id}`, {
+         
+         
         });
-
+console.log(response);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);

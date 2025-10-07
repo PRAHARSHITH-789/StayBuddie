@@ -62,8 +62,8 @@ hostelSchema.pre('save', async function(next) {
 });
 
 // Method to compare password
-hostelSchema.methods.comparePassword = async function(candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.hostel_password);
+hostelSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.hostel_password);
 };
 
 module.exports = mongoose.model('Hostel', hostelSchema);

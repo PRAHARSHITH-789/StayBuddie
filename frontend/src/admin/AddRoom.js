@@ -114,10 +114,8 @@ useEffect(() => {
 
 const fetchRooms = () => {
     axios.get(`${process.env.REACT_APP_URL}/admin/rooms`, {
-      params: { hostel_id ,page : page,size : LIMIT},
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      params: { hostel_id },
+    
     }).then(({data})=>{
       setPage(page+1);
       setRooms([...rooms, ...data.records]); 
@@ -196,69 +194,62 @@ const fetchRooms = () => {
 
 
   const handleSubmit = async () => {
-    if (!validateRoomData()) return;
-  
-    try {
-      const hostel_id = localStorage.getItem('hostel_id');
-      const token = localStorage.getItem('authToken');
-  
-      if (!hostel_id) {
-        toast.error('No hostel_id found.');
-        return;
-      }
-  
-      if (!roomData.room_number || !roomData.room_sharing) {
-        toast.error('Incomplete room data.');
-        return;
-      }
-  
-      setLoading1(true);
-  
-      // Auto-set room_vacancy to room_sharing value
-      const finalRoomData = {
-        ...roomData,
-        room_vacancy: roomData.room_sharing,
-        hostel_id,
-      };
-  
-      const response = await fetch(`${process.env.REACT_APP_URL}/admin/addRoom`, {
-        method: 'POST',
+  if (!validateRoomData()) return;
+
+  try {
+    const hostel_id = localStorage.getItem('hostel_id');
+
+    if (!hostel_id) {
+      toast.error('No hostel_id found.');
+      return;
+    }
+
+    if (!roomData.room_number || !roomData.room_sharing) {
+      toast.error('Incomplete room data.');
+      return;
+    }
+
+    setLoading1(true);
+
+    // Auto-set room_vacancy to room_sharing value
+    const finalRoomData = {
+      ...roomData,
+      room_vacancy: roomData.room_sharing,
+      hostel_id,
+    };
+
+    // Axios POST request without token
+    const response = await axios.post(
+      `${process.env.REACT_APP_URL}/admin/addRoom`,
+      finalRoomData,
+      {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(finalRoomData),
-      });
-  
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        toast.error(`Error: ${errorResponse.message || 'An error occurred'}`);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorResponse.message || 'An error occurred'}`);
       }
-  
-      const newRoom = await response.json();
-  
-      setRooms((prevRooms) => [
-        ...prevRooms,
-        { ...finalRoomData, _id: newRoom._id },
-      ]);
-  
-      setRoomData({
-        room_number: '',
-        room_sharing: '',
-      });
-  
-      handleClose();
-      toast.success('Room added successfully.');
-    } catch (error) {
-      console.error('Error adding room:', error);
-      toast.error('Failed to add room.');
-    } finally {
-      setLoading1(false);
-    }
-  };
-  
+    );
 
+    const newRoom = response.data; // Axios automatically parses JSON
+
+    setRooms((prevRooms) => [
+      ...prevRooms,
+      { ...finalRoomData, _id: newRoom._id },
+    ]);
+
+    setRoomData({
+      room_number: '',
+      room_sharing: '',
+    });
+
+    handleClose();
+    toast.success('Room added successfully.');
+  } catch (error) {
+    console.error('Error adding room:', error);
+    toast.error(error.response?.data?.message || 'Failed to add room.');
+  } finally {
+    setLoading1(false);
+  }
+};
 
 
 

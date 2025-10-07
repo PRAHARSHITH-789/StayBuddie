@@ -13,7 +13,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     // origin: "http://192.168.1.34:3000",
-    origin: "http://localhost:3000",
+    origin: `${process.env.ORIGIN}`,
     credentials: true,
   },
   pingTimeout: 5000,

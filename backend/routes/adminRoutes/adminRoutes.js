@@ -34,8 +34,8 @@ let otpStorage = {};
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'phanikumar0520@gmail.com', // Replace with your Gmail
-    pass: 'qxvicvyrkyxjeoeg', // Replace with your Gmail password or App Password
+    user: 'siddhu.vakkapatla@gmail.com', // Replace with your Gmail
+    pass: 'navyasiddhu@143', // Replace with your Gmail password or App Password
   },
 });
 
@@ -51,7 +51,7 @@ router.post('/send-otp', verifyToken, (req, res) => {
   otpStorage[email] = otp;
 
   const mailOptions = {
-    from: 'phanikumar0520@gmail.com',
+    from: 'siddhu.vakkapatla@gmail.com',
     to: email,
     subject: 'Your OTP Code',
     text: `Your OTP code is ${otp}`,
@@ -154,14 +154,14 @@ router.post('/login', async (req, res) => {
 
 
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid phone number or password' });
+      return res.status(400).json({ message: 'Inval' });
     }
 
     const token = generateToken(hostel._id);
 
     res.json({ token, hostel_id: hostel._id, hostel_phone });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: error });
   }
 });
 
@@ -270,7 +270,7 @@ router.put('/updateHostelFees', verifyToken, async (req, res) => {
 // ======================================== ROOMS ===================================================
 
 // Add Room
-router.post('/addRoom', verifyToken, async (req, res) => {
+router.post('/addRoom',  async (req, res) => {
   const { room_number, room_sharing, room_vacancy, hostel_id } = req.body;
 
   // console.log('Received data:', { room_number, room_sharing, room_vacancy, hostel_id });
@@ -316,7 +316,7 @@ router.post('/addRoom', verifyToken, async (req, res) => {
 
 
 // getting all rooms
-router.get('/getrooms', verifyToken, async (req, res) => {
+router.get('/getrooms', async (req, res) => {
   const { hostel_id } = req.query;
 
   try {
@@ -413,7 +413,7 @@ router.get('/getrooms', verifyToken, async (req, res) => {
 // });
 
 // API endpoint to fetch rooms
-router.get('/rooms', verifyToken, async (req, res) => {
+router.get('/rooms',  async (req, res) => {
   const { hostel_id } = req.query; // Get hostel_id from the query parameters
 
   try {
@@ -556,7 +556,7 @@ router.get('/rooms/search', async (req, res) => {
 // =============================================== BUDDIES ====================================================
 
 // Add buddies
-router.post('/addBuddie', verifyToken, async (req, res) => {
+router.post('/addBuddie',  async (req, res) => {
   const {
     buddie_name, buddie_dob, buddie_gender, buddie_contact, buddie_email,
     buddie_profession, buddie_guardian_name, buddie_emergency_contact,
@@ -786,7 +786,7 @@ router.put('/updateBuddie/:id', verifyToken, async (req, res) => {
 
 
 // API endpoint to fetch buddies
-router.get('/buddies', verifyToken, async (req, res) => {
+router.get('/buddies', async (req, res) => {
   const { hostel_id } = req.query; // Get hostel_id from the query parameters
 
   try {
@@ -799,10 +799,11 @@ router.get('/buddies', verifyToken, async (req, res) => {
     const total = await Buddie.countDocuments({ hostel_id, approved: true });
 
     // Fetch buddies with only specific fields
-    const buddies = await Buddie.find({ hostel_id, approved: true })
-      .select('buddie_name buddie_dob buddie_gender buddie_contact buddie_email buddie_profession buddie_guardian_name buddie_emergency_contact buddie_bike_no room_no') // Select only specific fields
-      .skip(skip)
-      .limit(size);
+    const buddies = await Buddie.find();
+     // .select('buddie_name buddie_dob buddie_gender buddie_contact buddie_email buddie_profession buddie_guardian_name buddie_emergency_contact buddie_bike_no room_no') // Select only specific fields
+      //.skip(skip)
+      //.limit(size);
+    
 
     // Check if buddies are found
     // if (!buddies || buddies.length === 0) {
@@ -878,7 +879,7 @@ router.get('/buddie/:id', verifyToken, async (req, res) => {
 //   }
 // });
 
-router.delete('/deleteBuddie/:id', verifyToken, async (req, res) => {
+router.delete('/deleteBuddie/:id', async (req, res) => {
   const { id } = req.params;
   const { hostel_id } = req.body;
 
@@ -974,7 +975,7 @@ router.put('/approveBuddie/:buddieId', async (req, res) => {
 });
 
 
-delete buddie
+
 router.delete('/deleteBuddie/:buddieId', async (req, res) => {
   const { buddieId } = req.params;
 
@@ -1200,7 +1201,7 @@ router.get('/FoodMenu/:hostel_id', async (req, res) => {
 // ========================================================= DASHBOARD ==================================================
 
 // main dashboard
-router.get('/dashboard', verifyToken, async (req, res) => {
+router.get('/dashboard',  async (req, res) => {
   const { hostel_id } = req.query;
 
   if (!hostel_id) {

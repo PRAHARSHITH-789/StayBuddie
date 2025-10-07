@@ -1,0 +1,32 @@
+[
+  {
+    "room_number": "101",
+    "room_sharing": 2,
+    "hostel_id": "68e275c9a92df44c4a7d166d",
+    "room_vacancy": 1
+  },
+  {
+    "room_number": "102",
+    "room_sharing": 3,
+    "hostel_id": "68e275c9a92df44c4a7d166d",
+    "room_vacancy": 2
+  },
+  {
+    "room_number": "103",
+    "room_sharing": 1,
+    "hostel_id": "68e275c9a92df44c4a7d166d",
+    "room_vacancy": 0
+  },
+  {
+    "room_number": "104",
+    "room_sharing": 4,
+    "hostel_id": "68e275c9a92df44c4a7d166d",
+    "room_vacancy": 3
+  },
+  {
+    "room_number": "105",
+    "room_sharing": 2,
+    "hostel_id": "68e275c9a92df44c4a7d166d",
+    "room_vacancy": 2
+  }
+]

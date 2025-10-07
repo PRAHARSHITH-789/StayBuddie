@@ -793,9 +793,9 @@ useEffect(() => {
 const fetchBuddies = () => {
     axios.get(`${process.env.REACT_APP_URL}/admin/buddies`, {
       params: { hostel_id ,page : page,size : LIMIT},
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+      //headers: {
+        //'Authorization': `Bearer ${token}`,
+      //},
     }).then(({data})=>{
       setPage(page+1);
       setBuddies([...buddies, ...data.records]); 
@@ -811,41 +811,32 @@ const fetchBuddies = () => {
 
 
   // Function to fetch rooms
-  const getRooms = async () => {
+const getRooms = async () => {
+  setLoading(true);
+  try {
+    const hostel_id = localStorage.getItem('hostel_id');
 
-    try {
-      const hostel_id = localStorage.getItem('hostel_id'); // authToken is your hostel_id
-      const token = localStorage.getItem('authToken'); // authToken is your hostel_id
+    const response = await axios.get(`${process.env.REACT_APP_URL}/admin/getrooms`, {
+      params: { hostel_id }, // safer than query string
+      // headers: { Authorization: `Bearer ${token}` } // optional if needed
+    });
 
-      const response = await fetch(`${ process.env.REACT_APP_URL}/admin/getrooms?hostel_id=${hostel_id}`, {
-        
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
-        },
-      });
+    const roomsData = response.data; // axios already parses JSON
+    setRooms(roomsData); // Update the state
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const roomsData = await response.json();
-      setRooms(roomsData); // Update the state with the fetched rooms
-
-
-    } catch (error) {
-      console.error('Error fetching rooms:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error('Error fetching rooms:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Fetch rooms when the component mounts
+
   useEffect(() => {
     getRooms();
+    console.log(rooms);
   }, []);
-
 
 
 
@@ -991,10 +982,11 @@ const fetchBuddies = () => {
         // setLoading2(true); // Set loading to true before fetching
   
         // Send POST request to add a new buddie
-        const response = await axios.post(`${ process.env.REACT_APP_URL}/admin/addBuddie`, dataToSend, {
+        console.log(dataToSend);
+        const response = await axios.post(`${process.env.REACT_APP_URL}/admin/addBuddie`, dataToSend, {
           
           headers: {
-            'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+           // 'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
             'Content-Type': 'application/json',
           },
         });
@@ -1076,11 +1068,11 @@ const fetchBuddies = () => {
   
         // Send PUT request to update a buddie
         const response = await axios.put(
-          `${ process.env.REACT_APP_URL}/admin/updateBuddie/${editFormData._id}`,
+          `${process.env.REACT_APP_URL}/admin/updateBuddie/${editFormData._id}`,
           dataToSend,
           {
             headers: {
-              'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+             // 'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
               'Content-Type': 'application/json',
             },
           }
@@ -1119,10 +1111,10 @@ const handleDelete = async () => {
   try {
     setLoading(true); // Set loading to true before fetching
     const response = await axios.delete(
-      `${ process.env.REACT_APP_URL}/admin/deleteBuddie/${selectedBuddieId}`,
+      `${process.env.REACT_APP_URL}/admin/deleteBuddie/${selectedBuddieId}`,
       {
         headers: {
-          'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+          //'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
           'Content-Type': 'application/json',
         },
         data: {

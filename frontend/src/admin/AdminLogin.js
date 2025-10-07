@@ -158,7 +158,9 @@ const AdminLogin = () => {
 
 
   const handleLogin = async () => {
-
+console.log(hostelPhone);
+console.log(hostelPassword);
+console.log(process.env.REACT_APP_URL);
     const phoneNumberError = validatePhoneNumber(hostelPhone);
     const passwordError = validatePassword(hostelPassword);
 
@@ -170,13 +172,14 @@ const AdminLogin = () => {
       return;
     }
 
-    setErrors({});
+    setErrors({})
 
     try {
       setLoading1(true);
       const loginResponse = await axios.post(`${process.env.REACT_APP_URL}/admin/login`, {
         hostel_phone: hostelPhone,
         hostel_password: hostelPassword,
+
       });
 
       // console.log('Login Response:', loginResponse.data);
@@ -338,11 +341,13 @@ const AdminLogin = () => {
           </Button>
           
         </Box>
-        <Box>
-        <Link to={'/buddie-login'}>
-          <LocationChip1 label={'Login as Buddie.. ?'} />
-        </Link>
-        </Box>
+      <Box style={{margin:"2px"}}>
+  <button  style={{border:"none"}} onClick={() => navigate('/buddie-login')}>
+    <LocationChip1 label="Login as Buddie.. ?" />
+  </button>
+</Box>
+
+
 
     
     

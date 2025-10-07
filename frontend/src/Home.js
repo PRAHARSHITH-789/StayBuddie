@@ -276,7 +276,7 @@ const Home = () => {
     <div>
 
 
-      <>
+{console.log(process.env.REACT_APP_API_URL)}    <>
       <AppBar position="static">
         <HeaderContainer>
           <Box display="flex" alignItems="center">

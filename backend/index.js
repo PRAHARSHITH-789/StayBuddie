@@ -20,7 +20,7 @@ const port = process.env.PORT || 5000;
 // };
 // app.use(cors(corsOptions));
 
-
+app.use(cors());
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -48,11 +48,11 @@ app.use((req,res,next) => {
 app.use(cors()); // Enable CORS for all origins
 
 // Increase the size limit for JSON payloads
-app.use(express.json({ limit: '10mb' })); // Increase the limit as needed
+app.use(express.json({ limit: '20mb' })); // Increase the limit as needed
 app.use(express.urlencoded({ limit: '10mb', extended: true })); // Increase the limit as needed
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI,{
+mongoose.connect(`${process.env.MONGODB_URL}/Staybuddies`,{
     serverSelectionTimeoutMS: 30000 // Increase timeout to 30 seconds
 }).then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('Could not connect to MongoDB:', err));
